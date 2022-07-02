@@ -1,4 +1,4 @@
-package com.example.teegram
+package com.tcoder.teegram
 
 import io.flutter.embedding.android.FlutterActivity
 
