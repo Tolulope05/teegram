@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -8,7 +9,19 @@ import './utils/colors.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  if (kIsWeb) {
+    await Firebase.initializeApp(
+      options: const FirebaseOptions(
+          apiKey: "AIzaSyCHg4JOGFbE8xTBlmUIAykAFKM8i07CY2o",
+          authDomain: "teegram-90c29.firebaseapp.com",
+          projectId: "teegram-90c29",
+          storageBucket: "teegram-90c29.appspot.com",
+          messagingSenderId: "147716583765",
+          appId: "1:147716583765:web:13c48a58f9b63c02eaffdc"),
+    );
+  } else {
+    await Firebase.initializeApp();
+  }
   runApp(const MyApp());
 }
 
