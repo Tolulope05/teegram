@@ -1,6 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 
+import '../utils/utils.dart';
 import '../resources/auth_methods.dart';
 import '../utils/colors.dart';
 import '../widgets/text_field_input.dart';
@@ -18,6 +22,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
+  Uint8List? _image;
 
   @override
   void dispose() {
@@ -26,6 +31,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     _bioController.dispose();
     _usernameController.dispose();
     super.dispose();
+  }
+
+  void selectImage() async {
+    Uint8List im = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = im;
+    });
   }
 
   @override
@@ -46,52 +58,62 @@ class _SignUpScreenState extends State<SignUpScreen> {
             children: [
               Flexible(flex: 1, child: Container()),
               svg,
-              const SizedBox(height: 64),
+              const SizedBox(height: 50),
               // Circular widget to accept and show our selected File.
               Stack(
                 children: <Widget>[
-                  const CircleAvatar(
-                    radius: 64,
-                    backgroundImage: NetworkImage(
-                      'https://images.unsplash.com/photo-1600180758890-6b94519a8ba6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80',
-                    ),
-                  ),
+                  _image != null
+                      ? Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: CircleAvatar(
+                            radius: 64,
+                            backgroundImage: MemoryImage(_image!),
+                          ),
+                        )
+                      : const Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: CircleAvatar(
+                            radius: 64,
+                            backgroundImage: NetworkImage(
+                                'https://i.stack.imgur.com/l60Hf.png'),
+                          ),
+                        ),
                   Positioned(
-                    bottom: -10,
+                    bottom: 0,
                     left: 80,
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: selectImage,
                       icon: const Icon(Icons.add_a_photo),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 18),
               TextFieldInput(
                 textEditingController: _usernameController,
                 hintText: 'Enter your Username.',
                 textInputType: TextInputType.text,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 18),
               TextFieldInput(
                 textEditingController: _emailController,
                 hintText: 'Enter your Email Address.',
                 textInputType: TextInputType.emailAddress,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 18),
               TextFieldInput(
                 textEditingController: _passwordController,
                 hintText: 'Enter your Password.',
                 textInputType: TextInputType.visiblePassword,
                 isPass: true,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 18),
               TextFieldInput(
                 textEditingController: _bioController,
                 hintText: 'Enter your Bio.',
                 textInputType: TextInputType.text,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 18),
               InkWell(
                 onTap: () async {
                   String res = await AuthMethods().signUpUser(
@@ -99,6 +121,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     password: _passwordController.text,
                     username: _usernameController.text,
                     bio: _bioController.text,
+                    file: _image!,
                   );
                   print(res);
                 },
