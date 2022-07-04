@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:teegram/screens/signup_screen.dart';
 
+import './screens/login_screen.dart';
 import './responsive/mobile_screen_layout.dart';
 import './responsive/responsive_layout_screen.dart';
 import './responsive/web_screen_layout.dart';
@@ -36,10 +38,12 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: mobileBackgroundColor,
       ),
       debugShowCheckedModeBanner: false,
-      home: const ResponsiveLayout(
-        webScreenLayout: WebScreenLayout(),
-        mobileScreenLayout: MobileScreenLayout(),
-      ),
+      home: SignUpScreen(),
+      // home: LoginScreen(),
+      // home: const ResponsiveLayout(
+      //   webScreenLayout: WebScreenLayout(),
+      //   mobileScreenLayout: MobileScreenLayout(),
+      // ),
     );
   }
 }
