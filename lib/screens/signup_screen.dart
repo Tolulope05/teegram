@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:teegram/utils/colors.dart';
-import 'package:teegram/widgets/text_field_input.dart';
+
+import '../resources/auth_methods.dart';
+import '../utils/colors.dart';
+import '../widgets/text_field_input.dart';
 
 class SignUpScreen extends StatefulWidget {
   SignUpScreen({Key? key}) : super(key: key);
@@ -90,9 +92,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 textInputType: TextInputType.text,
               ),
               const SizedBox(height: 24),
-
               InkWell(
-                onTap: () {},
+                onTap: () async {
+                  String res = await AuthMethods().signUpUser(
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                    username: _usernameController.text,
+                    bio: _bioController.text,
+                  );
+                  print(res);
+                },
                 child: Container(
                   width: double.infinity,
                   alignment: Alignment.center,
