@@ -23,6 +23,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   Uint8List? _image;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -38,6 +39,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
     setState(() {
       _image = im;
     });
+  }
+
+  void signUpUser() async {
+    if (_image == null) {
+      showSnackBar('Please pick an Image', context);
+      return;
+    }
+    setState(() {
+      _isLoading = true;
+    });
+
+    String res = await AuthMethods().signUpUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+      username: _usernameController.text,
+      bio: _bioController.text,
+      file: _image!,
+    );
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    if (res != 'Success') {
+      showSnackBar(res, context);
+    }
   }
 
   @override
@@ -116,16 +143,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               const SizedBox(height: 18),
               InkWell(
-                onTap: () async {
-                  String res = await AuthMethods().signUpUser(
-                    email: _emailController.text,
-                    password: _passwordController.text,
-                    username: _usernameController.text,
-                    bio: _bioController.text,
-                    file: _image!,
-                  );
-                  print(res);
-                },
+                onTap: signUpUser,
                 child: Container(
                   width: double.infinity,
                   alignment: Alignment.center,
@@ -138,7 +156,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     color: blueColor,
                   ),
-                  child: const Text('Log In'),
+                  child: _isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(color: primaryColor),
+                        )
+                      : const Text('Sign Up'),
                 ),
               ),
               const SizedBox(height: 12),
