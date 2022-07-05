@@ -49,6 +49,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       semanticsLabel: 'Acme Logo',
     );
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 32),

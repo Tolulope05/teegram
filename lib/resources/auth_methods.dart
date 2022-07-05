@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:teegram/resources/storage_method.dart';
 
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -27,6 +28,8 @@ class AuthMethods {
           password: password,
         );
         print(cred.user!.uid);
+        String photoUrl = await StorageMethods()
+            .uploadImagetoStorage('profilePics', file, false);
         // Add user to our database.
         await _firestore.collection('users').doc(cred.user!.uid).set({
           'username': username,
@@ -35,6 +38,7 @@ class AuthMethods {
           'bio': bio,
           'followers': [],
           'following': [],
+          'photoUrl': photoUrl,
         });
 
         res = 'Success';
