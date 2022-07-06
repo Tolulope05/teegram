@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:teegram/resources/storage_method.dart';
 
 class AuthMethods {
@@ -27,7 +26,7 @@ class AuthMethods {
           email: email,
           password: password,
         );
-        print(cred.user!.uid);
+        // print(cred.user!.uid);
         String photoUrl = await StorageMethods()
             .uploadImagetoStorage('profilePics', file, false);
         // Add user to our database.
@@ -48,6 +47,36 @@ class AuthMethods {
         res = 'The Email is badly formatted';
       } else if (err.code == 'weak-password') {
         res = 'The Password should be at least 6 characters.';
+      } else {
+        res = err.message.toString();
+      }
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
+  //Logging in Users.
+  Future<String> loginUser({
+    required String email,
+    required String password,
+  }) async {
+    String res = 'Some error occured!';
+    try {
+      if (email.trim().isNotEmpty || password.trim().isNotEmpty) {
+        await _auth.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        res = 'Success';
+      } else {
+        res = 'Please enter all the fields.';
+      }
+    } on FirebaseAuthException catch (err) {
+      if (err.code == 'user-not-found') {
+        res = 'There is no existing user matching this username.';
+      } else if (err.code == 'wrong-password') {
+        res = 'Please check your details for wrong or missing information.';
       } else {
         res = err.message.toString();
       }
