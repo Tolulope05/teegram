@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/user_provider.dart';
 
-import '../utils/dimensions.dart';
+import '../utils/global_variables.dart';
 
 class ResponsiveLayout extends StatefulWidget {
   final Widget webScreenLayout;
@@ -21,9 +21,8 @@ class ResponsiveLayout extends StatefulWidget {
 class _ResponsiveLayoutState extends State<ResponsiveLayout> {
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
     addData();
+    super.initState();
   }
 
   void addData() async {
