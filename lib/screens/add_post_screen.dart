@@ -22,6 +22,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   final TextEditingController _descriptionController = TextEditingController();
 
+  bool _isLoading = false;
+
   _selectImage(BuildContext context) async {
     return showDialog(
         context: context,
@@ -68,6 +70,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
     String username,
     String profileImage,
   ) async {
+    setState(() {
+      _isLoading = true;
+    });
     try {
       String res = await FirestoreMethods().uploadPost(
         _descriptionController.text,
@@ -77,15 +82,28 @@ class _AddPostScreenState extends State<AddPostScreen> {
         _file!,
       );
       if (res == "Success") {
+        setState(() {
+          _isLoading = false;
+        });
         // ignore: use_build_context_synchronously
         showSnackBar("Posted!", context);
+        clearImage();
       } else {
+        setState(() {
+          _isLoading = false;
+        });
         // ignore: use_build_context_synchronously
         showSnackBar(res, context);
       }
     } catch (e) {
       showSnackBar(e.toString(), context);
     }
+  }
+
+  void clearImage() {
+    setState(() {
+      _file = null;
+    });
   }
 
   @override
@@ -130,6 +148,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
             ),
             body: Column(
               children: [
+                _isLoading
+                    ? const LinearProgressIndicator()
+                    : const Padding(
+                        padding: EdgeInsets.only(top: 0),
+                      ),
+                const Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.start,
