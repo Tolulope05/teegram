@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:teegram/providers/user_provider.dart';
+import 'package:teegram/resources/firestore_methos.dart';
 import 'package:teegram/utils/colors.dart';
 import 'package:teegram/utils/utils.dart';
 
@@ -62,6 +63,37 @@ class _AddPostScreenState extends State<AddPostScreen> {
         });
   }
 
+  void postImage(
+    String uid,
+    String username,
+    String profileImage,
+  ) async {
+    try {
+      String res = await FirestoreMethods().uploadPost(
+        _descriptionController.text,
+        uid,
+        username,
+        profileImage,
+        _file!,
+      );
+      if (res == "Success") {
+        // ignore: use_build_context_synchronously
+        showSnackBar("Posted!", context);
+      } else {
+        // ignore: use_build_context_synchronously
+        showSnackBar(res, context);
+      }
+    } catch (e) {
+      showSnackBar(e.toString(), context);
+    }
+  }
+
+  @override
+  void dispose() {
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final User user = Provider.of<UserProvider>(context).getUser;
@@ -83,7 +115,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
               // centerTitle: true,
               actions: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () =>
+                      postImage(user.uid, user.username, user.photoUrl),
                   child: const Text(
                     'Post',
                     style: TextStyle(
