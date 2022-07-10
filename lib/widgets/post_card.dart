@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:teegram/models/user.dart';
 import 'package:teegram/providers/user_provider.dart';
-import 'package:teegram/resources/firestore_methos.dart';
+import 'package:teegram/resources/firestore_methods.dart';
 import 'package:teegram/utils/colors.dart';
 import 'package:teegram/widgets/like_animation.dart';
 
@@ -143,7 +143,7 @@ class _PostCardState extends State<PostCard> {
                           Icons.favorite,
                           color: Colors.red,
                         )
-                      : Icon(Icons.favorite_border),
+                      : const Icon(Icons.favorite_border),
                 ),
               ),
               IconButton(
