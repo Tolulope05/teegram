@@ -75,6 +75,7 @@ class FirestoreMethods {
           "profilePic": profilePic,
           "name": name,
           "uid": uid,
+          "text": text,
           "commentId": commentId,
           "datePublished": DateTime.now(),
         });

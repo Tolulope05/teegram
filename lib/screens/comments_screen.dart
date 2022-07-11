@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../resources/firestore_methods.dart';
@@ -34,7 +35,27 @@ class _CommentScreenState extends State<CommentScreen> {
           title: const Text('Comment'),
           centerTitle: false,
         ),
-        body: const CommentCard(),
+        body: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection("posts")
+              .doc(widget.snap["postId"])
+              .collection("comment")
+              .snapshots(),
+          builder: (context,
+              AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshots) {
+            if (snapshots.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return ListView.builder(
+              itemCount: snapshots.data!.docs.length,
+              // itemCount: (snapshots.data! as dynamic).docs.length,
+              itemBuilder: (context, index) =>
+                  CommentCard(snap: snapshots.data!.docs[index].data()),
+            );
+          },
+        ),
         bottomNavigationBar: SafeArea(
           child: Container(
             height: kToolbarHeight,
