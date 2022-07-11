@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:teegram/models/user.dart';
 import 'package:teegram/providers/user_provider.dart';
 import 'package:teegram/resources/firestore_methods.dart';
+import 'package:teegram/screens/comments_screen.dart';
 import 'package:teegram/utils/colors.dart';
 import 'package:teegram/widgets/like_animation.dart';
 
@@ -147,7 +148,12 @@ class _PostCardState extends State<PostCard> {
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => const CommentScreen()),
+                  );
+                },
                 icon: const Icon(
                   Icons.comment_outlined,
                 ),

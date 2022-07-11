@@ -36,6 +36,12 @@ class _LikeAnimationState extends State<LikeAnimation>
   }
 
   @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   void didUpdateWidget(covariant LikeAnimation oldWidget) {
     super.didUpdateWidget(oldWidget);
     // checkout widget.isAnimating
@@ -57,12 +63,6 @@ class _LikeAnimationState extends State<LikeAnimation>
         widget.onEnd!();
       }
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    controller.dispose();
   }
 
   @override
