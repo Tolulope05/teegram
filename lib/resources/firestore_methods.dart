@@ -86,4 +86,22 @@ class FirestoreMethods {
       print(e.toString());
     }
   }
+
+  // deleting the post
+  Future<void> deletePost(String postId, String postUrl) async {
+    try {
+      await _firestore.collection('posts').doc(postId).delete();
+      QuerySnapshot document = await _firestore
+          .collection('posts')
+          .doc(postId)
+          .collection('comment')
+          .get();
+      for (var doc in document.docs) {
+        doc.reference.delete();
+      }
+      StorageMethods().deleteImage(postUrl);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
 }
