@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:teegram/screens/search_screen.dart';
+
+import '../screens/profile_screen.dart';
+import '../screens/search_screen.dart';
 import '../screens/add_post_screen.dart';
 import '../screens/feed_screen.dart';
 
@@ -10,5 +12,5 @@ List<Widget> homeScreenItems = [
   const SearchScreen(),
   const AddPostScreen(),
   const Text('notif'),
-  const Text('profile'),
+  const ProfileScreen(),
 ];

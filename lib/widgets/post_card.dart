@@ -136,7 +136,7 @@ class _PostCardState extends State<PostCard> {
                           ? child
                           : const Center(child: CircularProgressIndicator());
                     },
-                    fit: BoxFit.fitWidth,
+                    fit: BoxFit.contain,
                     alignment: Alignment.center,
                   ),
                 ),
