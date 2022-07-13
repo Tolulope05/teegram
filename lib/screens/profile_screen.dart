@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:teegram/resources/firestore_methods.dart';
 import 'package:teegram/utils/colors.dart';
 import 'package:teegram/utils/utils.dart';
 
@@ -15,7 +16,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  var userdata = {};
+  var userData = {};
   int postLength = 0;
   int followersLength = 0;
   int followingLength = 0;
@@ -39,14 +40,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       // Get post length
       var postSnap = await FirebaseFirestore.instance
           .collection("posts")
-          .where("userId", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
           .get();
       setState(() {
-        userdata = userSnap.data()!;
+        userData = userSnap.data()!;
         postLength = postSnap.docs.length;
-        followersLength = userdata["followers"].length;
-        followingLength = userdata["following"].length;
-        isFollowing = userdata["following"]
+        followersLength = userData["followers"].length;
+        followingLength = userData["following"].length;
+        isFollowing = userData["following"]
             .contains(FirebaseAuth.instance.currentUser!.uid);
       });
     } catch (e) {
@@ -66,7 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         : Scaffold(
             appBar: AppBar(
               backgroundColor: mobileBackgroundColor,
-              title: Text(userdata["username"]),
+              title: Text(userData["username"]),
               centerTitle: false,
             ),
             body: ListView(
@@ -80,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           CircleAvatar(
                             backgroundColor: Colors.grey,
                             backgroundImage: NetworkImage(
-                              userdata["photoUrl"],
+                              userData["photoUrl"],
                             ),
                             radius: 40,
                           ),
@@ -120,14 +121,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 textColor: Colors.black,
                                                 backgroundColor: Colors.white,
                                                 borderColor: Colors.grey,
-                                                onPressed: () {},
+                                                onPressed: () async {
+                                                  await FirestoreMethods()
+                                                      .followUser(
+                                                    FirebaseAuth.instance
+                                                        .currentUser!.uid,
+                                                    userData["uid"],
+                                                  );
+                                                  setState(() {
+                                                    isFollowing = false;
+                                                    followersLength--;
+                                                  });
+                                                },
                                               )
                                             : FollowButton(
                                                 text: "Follow",
                                                 textColor: Colors.white,
                                                 backgroundColor: Colors.blue,
                                                 borderColor: Colors.blue,
-                                                onPressed: () {},
+                                                onPressed: () async {
+                                                  await FirestoreMethods()
+                                                      .followUser(
+                                                    FirebaseAuth.instance
+                                                        .currentUser!.uid,
+                                                    userData["uid"],
+                                                  );
+                                                  setState(() {
+                                                    isFollowing = true;
+                                                    followersLength++;
+                                                  });
+                                                },
                                               ),
                                   ],
                                 )
@@ -140,7 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         alignment: Alignment.centerLeft,
                         padding: const EdgeInsets.only(top: 15),
                         child: Text(
-                          userdata["username"],
+                          userData["username"],
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -150,7 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         alignment: Alignment.centerLeft,
                         padding: const EdgeInsets.only(top: 1),
                         child: Text(
-                          userdata["bio"],
+                          userData["bio"],
                           style: const TextStyle(
                             fontWeight: FontWeight.w300,
                           ),
