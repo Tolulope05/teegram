@@ -10,6 +10,8 @@ import 'package:teegram/utils/colors.dart';
 import 'package:teegram/utils/utils.dart';
 import 'package:teegram/widgets/like_animation.dart';
 
+import '../utils/global_variables.dart';
+
 class PostCard extends StatefulWidget {
   final snap;
   const PostCard({Key? key, required this.snap}) : super(key: key);
@@ -45,9 +47,19 @@ class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
     final User user = Provider.of<UserProvider>(context).getUser;
+    final width = MediaQuery.of(context).size.width;
     return Container(
-      color: mobileBackgroundColor,
+      //boundary needed for web
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: width > webScreenSize ? secondaryColor : mobileBackgroundColor,
+        ),
+        color: mobileBackgroundColor,
+      ),
       padding: const EdgeInsets.symmetric(vertical: 10),
+      margin: width > webScreenSize
+          ? EdgeInsets.symmetric(horizontal: width * 0.3, vertical: 5)
+          : const EdgeInsets.symmetric(horizontal: 15, vertical: 0),
       child: Column(
         // HEADER SECTION
         children: [
@@ -136,7 +148,9 @@ class _PostCardState extends State<PostCard> {
                           ? child
                           : const Center(child: CircularProgressIndicator());
                     },
-                    fit: BoxFit.contain,
+                    fit: width > webScreenSize
+                        ? BoxFit.fitHeight
+                        : BoxFit.contain,
                     alignment: Alignment.center,
                   ),
                 ),

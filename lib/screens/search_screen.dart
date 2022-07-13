@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
+import 'package:teegram/utils/global_variables.dart';
 import '../screens/profile_screen.dart';
 import '../utils/colors.dart';
 
@@ -17,12 +18,13 @@ class _SearchScreenState extends State<SearchScreen> {
   bool isShowUsers = false;
   @override
   void dispose() {
-    _searchController.dispose();
     super.dispose();
+    _searchController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -115,10 +117,16 @@ class _SearchScreenState extends State<SearchScreen> {
                       (snapshot.data! as dynamic).docs[index]["postUrl"],
                       fit: BoxFit.cover,
                     ),
-                    staggeredTileBuilder: (index) => StaggeredTile.count(
-                      (index % 7 == 0) ? 2 : 1,
-                      (index % 7 == 0) ? 2 : 1,
-                    ),
+                    staggeredTileBuilder: (index) =>
+                        MediaQuery.of(context).size.width > webScreenSize
+                            ? StaggeredTile.count(
+                                (index % 7 == 0) ? 1 : 1,
+                                (index % 7 == 0) ? 1 : 1,
+                              )
+                            : StaggeredTile.count(
+                                (index % 7 == 0) ? 2 : 1,
+                                (index % 7 == 0) ? 2 : 1,
+                              ),
                   );
                 }),
       ),
