@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
-import 'package:teegram/utils/colors.dart';
+import '../screens/profile_screen.dart';
+import '../utils/colors.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -84,7 +85,14 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         title: Text((snapshot.data! as dynamic).docs[index]
                             ["username"]),
-                        onTap: () {},
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ProfileScreen(
+                              uid: (snapshot.data! as dynamic).docs[index]
+                                  ["uid"],
+                            ),
+                          ),
+                        ),
                       );
                     },
                   );
