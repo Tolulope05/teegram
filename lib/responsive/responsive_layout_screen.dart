@@ -25,20 +25,32 @@ class _ResponsiveLayoutState extends State<ResponsiveLayout> {
     super.initState();
   }
 
-  void addData() async {
+  Future<bool> addData() async {
     UserProvider userProvider = Provider.of(context, listen: false);
     await userProvider.refreshUser();
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth > webScreenSize) {
-        // Display Webscreen
-        return widget.webScreenLayout;
-      }
-      // Mobile Screen
-      return widget.mobileScreenLayout;
-    });
+    return FutureBuilder(
+      future: addData(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+              child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation(Colors.green),
+          ));
+        }
+        return LayoutBuilder(builder: (context, constraints) {
+          if (constraints.maxWidth > webScreenSize) {
+            // Display Webscreen
+            return widget.webScreenLayout;
+          }
+          // Mobile Screen
+          return widget.mobileScreenLayout;
+        });
+      },
+    );
   }
 }

@@ -46,11 +46,12 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: mobileBackgroundColor,
         ),
         debugShowCheckedModeBanner: false,
-        home: StreamBuilder(
+        home: StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.active) {
               if (snapshot.hasData) {
+                print(snapshot.data);
                 return const ResponsiveLayout(
                   webScreenLayout: WebScreenLayout(),
                   mobileScreenLayout: MobileScreenLayout(),
@@ -58,13 +59,6 @@ class MyApp extends StatelessWidget {
               } else if (snapshot.hasError) {
                 return Center(
                   child: Text(snapshot.error.toString()),
-                );
-              }
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: primaryColor,
-                  ),
                 );
               }
             }

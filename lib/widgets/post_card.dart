@@ -138,8 +138,10 @@ class _PostCardState extends State<PostCard> {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.55,
+                Container(
+                  // height: MediaQuery.of(context).size.height * 0.55,
+                  constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height * 0.7),
                   width: double.infinity,
                   child: Image.network(
                     widget.snap['postUrl'],
@@ -148,10 +150,9 @@ class _PostCardState extends State<PostCard> {
                           ? child
                           : const Center(child: CircularProgressIndicator());
                     },
-                    fit: width > webScreenSize
-                        ? BoxFit.fitHeight
-                        : BoxFit.contain,
-                    alignment: Alignment.center,
+                    fit:
+                        width > webScreenSize ? BoxFit.fitHeight : BoxFit.cover,
+                    alignment: Alignment.topCenter,
                   ),
                 ),
                 AnimatedOpacity(
