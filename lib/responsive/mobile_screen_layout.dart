@@ -39,10 +39,11 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
-          physics: const NeverScrollableScrollPhysics(),
-          controller: pageController,
-          onPageChanged: onPageChange,
-          children: homeScreenItems),
+        physics: const NeverScrollableScrollPhysics(),
+        controller: pageController,
+        onPageChanged: onPageChange,
+        children: homeScreenItems,
+      ),
       bottomNavigationBar: CupertinoTabBar(
         backgroundColor: mobileBackgroundColor,
         items: [
